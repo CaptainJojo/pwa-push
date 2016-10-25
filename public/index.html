@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <meta charset=utf-8/>
+    <meta name="theme-color" content="#2F3BA2">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="/public/manifest.json">
+    <title>My First React Router App</title>
+  </head>
+  <body>
+    <div>
+      TEST
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/3.5.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAz-oNXw_CrWRAEEPmXOj5KtEbsc3GM0R8",
+    authDomain: "pwa-test-1362.firebaseapp.com",
+    databaseURL: "https://pwa-test-1362.firebaseio.com",
+    storageBucket: "pwa-test-1362.appspot.com",
+    messagingSenderId: "650161883311"
+  };
+  firebase.initializeApp(config);
+</script>
+    <script>
+
+
+      if ('serviceWorker' in navigator) {
+          console.log('Service Worker is supported');
+            navigator.serviceWorker.register('/public/sw.js', { scope: '/public/' }).then(function() {
+            return navigator.serviceWorker.ready;
+          }).then(function(reg) {
+            console.log('Service Worker is ready :^)', reg);
+            reg.pushManager.subscribe({userVisibleOnly: true}).then(function(sub) {
+              var endpointSections = sub.endpoint.split('/');
+              var subscriptionId = endpointSections[endpointSections.length - 1];
+               var newKey = firebase.database().ref().child('token').push().key;
+              firebase.database().ref('token/' + newKey).set({subscriptionId: subscriptionId});
+              console.log('endpoint:', subscriptionId);
+            });
+          }).catch(function(error) {
+            console.log('Service Worker error :^(', error);
+          });
+        }
+    </script>
+  </body>
+</html>
